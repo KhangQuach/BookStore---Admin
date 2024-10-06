@@ -1,6 +1,8 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
 import { cloneDeep } from 'lodash-es';
+import { DeleteOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import Drawer from "../Drawer/index.vue"
 const columns = [
   {
     title: 'Name',
@@ -10,32 +12,33 @@ const columns = [
   {
     title: 'Age',
     dataIndex: 'age',
-    width: '5%'
+    width: '3%'
   },
   {
     title: 'Gender',
     dataIndex: 'gender',
-    width: '5%'
-  },
-  {
-    title: 'Phone',
-    dataIndex: 'phone',
-    width: '7%'
+    width: '8%'
   },
   {
     title: 'Username',
     dataIndex: 'username',
-    width: '7%'
+    width: '8%'
   },
   {
     title: 'Password',
     dataIndex: 'password',
-    width: '7%'
+    width: '8%'
   },
   {
     title: 'Email',
     dataIndex: 'email',
-    width: '7%'
+    width: '8%'
+  },
+  
+  {
+    title: 'Phone',
+    dataIndex: 'phone',
+    width: '8%'
   },
   {
     title: 'Address 1',
@@ -51,8 +54,9 @@ const columns = [
   },
 
   {
-    title: 'operation',
+    title: 'Operation',
     dataIndex: 'operation',
+    width: '8%',
   },
 ];
 const dataSource = ref([
@@ -90,10 +94,12 @@ const handleAdd = () => {
   };
   dataSource.value.push(newData);
 };
+
 </script>
 
 <template>
-  <div class="p-10">
+  <div class="p-6">
+    <Drawer/>
     <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add New</a-button>
     <a-table bordered :data-source="dataSource" :columns="columns" class="">
       <template #bodyCell="{ column, text, record }">
@@ -111,13 +117,17 @@ const handleAdd = () => {
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="flex gap-2">
-            <a-button type="primary">Update</a-button>
+            <a-button type="primary" class="flex justify-center items-center">
+              <SettingOutlined />
+            </a-button>
             <a-popconfirm
               v-if="dataSource.length"
               title="Sure to delete?"
               @confirm="onDelete(record.key)"
             >
-              <a-button type="primary" danger>Delete</a-button>
+              <a-button type="primary" danger class="flex justify-center items-center">
+                <DeleteOutlined />
+              </a-button>
             </a-popconfirm>
           </div>
         </template>

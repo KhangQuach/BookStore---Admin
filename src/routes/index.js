@@ -5,6 +5,7 @@ import UserView from "../views/User.vue"
 import SignIn from '../views/Sign-in.vue';
 import BookView from '../views/Book.vue';
 import Home from '../views/Home.vue';
+import SignUp from '../views/Sign-up.vue';
 const router = createRouter({
   history: createWebHistory('/'),
   routes: [
@@ -13,18 +14,30 @@ const router = createRouter({
       component: () => import('../views/404.vue')
     },
     {
-      path: '/sign-in',
+      path: '/',
       name: 'Sign in',
       meta: {
-        layout: AuthLayout
+        layout: 'AuthLayout'
       },
-      component: SignIn
+      component: AuthLayout,
+      children:[
+        {
+          path: '/sign-in',
+          name: 'Sign in',
+          component: SignIn
+        },
+        {
+          path: '/sign-up',
+          name: 'Sign up',
+          component: SignUp
+        }
+      ]
     },
     {
       path: '/',
       name: 'Trang chủ',
       meta: {
-        layout: DefaultLayout
+        layout: 'DefaultLayout'
       },
       component: DefaultLayout,
       children: [
@@ -43,11 +56,6 @@ const router = createRouter({
           name: 'User',
           component: UserView
         },
-        {
-          path: '/book',
-          name: 'Book',
-          component: BookView
-        }
       ]
     }
   ]

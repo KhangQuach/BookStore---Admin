@@ -1,14 +1,23 @@
 <script setup>
+import { BellOutlined, MailOutlined } from '@ant-design/icons-vue';
+import Avatar from "./Avatar/index.vue"
 
 </script>
 
 <template>
-  <div class="h-16  fixed w-full bg-white z-10 border-b-2 flex flex-row-reverse items-center gap-2">
-    <a-avatar :size="40" class="mr-4">
-        <template #icon><UserOutlined /></template>
-    </a-avatar>
-    <a-button>Alert</a-button>
-    <a-button>Profile</a-button>
+  <div class="h-16  fixed w-full bg-white z-10 border-b-2 flex flex-row-reverse items-center gap-3">
+    
+    <Avatar/>
+    <a-badge :count="0">
+      <a-button class="flex justify-center items-center">
+        <MailOutlined />
+      </a-button>
+    </a-badge>
+    <a-badge :count="32">
+      <a-button class="flex justify-center items-center" >
+        <BellOutlined />
+      </a-button>
+    </a-badge>
     <a-input-search
       v-model:value="value"
       placeholder="input search text"
