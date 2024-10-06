@@ -1,12 +1,19 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { cloneDeep } from 'lodash-es';
-import { DeleteOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { computed, onMounted, reactive, ref } from 'vue';
+import { cloneDeep, result } from 'lodash-es';
 import Drawer from "../Drawer/index.vue"
+import axios from 'axios';
+import { DeleteOutlined, SettingOutlined } from '@ant-design/icons-vue';
+
+onMounted( async ()=> {
+  const { data } = await axios.get('http://localhost:3000/user')
+  console.log(data)
+  dataSource.value = data
+})
 const columns = [
   {
     title: 'Name',
-    dataIndex: 'name',
+    dataIndex: 'username',
     width: '12%',
   },
   {
@@ -42,15 +49,15 @@ const columns = [
   },
   {
     title: 'Address 1',
-    dataIndex: 'address',
+    dataIndex: 'address1',
   },
   {
     title: 'Address 2',
-    dataIndex: 'address',
+    dataIndex: 'address2',
   },
   {
     title: 'Address 3',
-    dataIndex: 'address',
+    dataIndex: 'address3',
   },
 
   {
@@ -60,34 +67,23 @@ const columns = [
   },
 ];
 const dataSource = ref([
-  {
-    key: '0',
-    name: 'Quach Thieu Khang',
-    age: 32,
-    address: 'London, Park Lane no. 0',
-  },
-  {
-    key: '1',
-    name: 'Edward King 1',
-    age: 32,
-    address: 'London, Park Lane no. 1',
-  },
 ]);
 const count = computed(() => dataSource.value.length + 1);
 const editableData = reactive({});
-const edit = key => {
-  editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
+const edit = _id => {
+  editableData[_id] = cloneDeep(dataSource.value.filter(item => _id === item._id)[0]);
 };
-const save = key => {
-  Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-  delete editableData[key];
+const save = _id => {
+  Object.assign(dataSource.value.filter(item => _id === item._id)[0], editableData[_id]);
+  delete editableData[_id];
 };
-const onDelete = key => {
-  dataSource.value = dataSource.value.filter(item => item.key !== key);
+const onDelete = (_id) => {
+  console.log(_id);
+  const response = axios.delete(`http://localhost:3000/user/${_id}`)
 };
 const handleAdd = () => {
   const newData = {
-    key: `${count.value}`,
+    _id: `${count.value}`,
     name: `Edward King ${count.value}`,
     age: 32,
     address: `London, Park Lane no. ${count.value}`,
@@ -105,27 +101,28 @@ const handleAdd = () => {
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
           <div class="editable-cell">
-            <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
-              <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" />
-              <check-outlined class="editable-cell-icon-check" @click="save(record.key)" />
+            <div v-if="editableData[record._id]" class="editable-cell-input-wrapper">
+              <a-input v-model:value="editableData[record._id].name" @pressEnter="save(record._id)" />
+              <check-outlined class="editable-cell-icon-check" @click="save(record._id)" />
             </div>
             <div v-else class="editable-cell-text-wrapper">
               {{ text || ' ' }}
-              <edit-outlined class="editable-cell-icon" @click="edit(record.key)" />
+              <edit-outlined class="editable-cell-icon" @click="edit(record._id)" />
             </div>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="flex gap-2">
-            <a-button type="primary" class="flex justify-center items-center">
+            <a-button type="primary" class="flex justify-center items-center px-4">
               <SettingOutlined />
             </a-button>
             <a-popconfirm
+              placement="bottomLeft"
               v-if="dataSource.length"
               title="Sure to delete?"
-              @confirm="onDelete(record.key)"
+              @confirm="onDelete(record._id)"
             >
-              <a-button type="primary" danger class="flex justify-center items-center">
+              <a-button type="primary" danger class="flex justify-center items-center px-4">
                 <DeleteOutlined />
               </a-button>
             </a-popconfirm>

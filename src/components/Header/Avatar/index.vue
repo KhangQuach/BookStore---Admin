@@ -8,15 +8,15 @@
           <a-avatar :size="40" class=" cursor-pointer">
             <template #icon><UserOutlined /></template>
           </a-avatar>
-            <h1 class="font-bold text-[20px]">Quach Thieu Khang</h1>
+            <h1 class="font-bold text-[16px]">Quach Thieu Khang</h1>
         </div>
 
-        <div class="mt-6">
-          <a-button type="text" class=" flex items-center w-full text-base text-left p-5">
+        <div class="mt-4 flex flex-col gap-1">
+          <a-button type="text" class=" flex items-center w-full text-sm text-left p-4">
             <ProfileOutlined  class="text-[22px]"/>
             View Profile
           </a-button>
-          <a-button type="text" class=" flex items-center w-full text-base text-left p-5" @click="handleLogout">
+          <a-button type="text" class=" flex items-center w-full text-sm text-left p-4" @click="handleLogout">
             <LogoutOutlined class="text-[22px]"/>
             Log out
           </a-button>
