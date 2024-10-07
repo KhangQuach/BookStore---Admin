@@ -1,74 +1,69 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import { cloneDeep, result } from 'lodash-es';
-import Drawer from "../Drawer/index.vue"
+import Drawer from "../../Drawer/index.vue"
 import axios from 'axios';
 import { DeleteOutlined, SettingOutlined } from '@ant-design/icons-vue';
 
 onMounted( async ()=> {
-  const { data } = await axios.get('http://localhost:3000/user')
-  console.log(data)
+  const { data } = await axios.get('http://localhost:3000/book')
   dataSource.value = data
 })
 const columns = [
   {
     title: 'Name',
-    dataIndex: 'username',
-    width: '12%',
+    dataIndex: 'name',
+    width: '15%',
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
+    title: 'Price',
+    dataIndex: 'price',
     width: '3%'
   },
   {
-    title: 'Gender',
-    dataIndex: 'gender',
-    width: '8%'
+    title: 'Author',
+    dataIndex: 'author',
+    width: '7%'
   },
   {
-    title: 'Username',
-    dataIndex: 'username',
-    width: '8%'
+    title: 'Publisher',
+    dataIndex: 'publisher',
+    width: '7%'
   },
   {
-    title: 'Password',
-    dataIndex: 'password',
-    width: '8%'
+    title: 'Publish Date',
+    dataIndex: 'publishDate',
+    width: '10%'
   },
   {
-    title: 'Email',
-    dataIndex: 'email',
-    width: '8%'
+    title: 'Language',
+    dataIndex: 'language',
+    width: '7%'
+  },
+  {
+    title: 'Type',
+    dataIndex: `typeBook`,
+    width: '7%',
+  },
+  {
+    title: 'Page Number',
+    dataIndex: 'pageNumber',
+    width: '7%'
   },
   
   {
-    title: 'Phone',
-    dataIndex: 'phone',
-    width: '8%'
+    title: 'Category',
+    dataIndex: 'category',
+    width: '7%'
   },
-  {
-    title: 'Address 1',
-    dataIndex: 'address1',
-  },
-  {
-    title: 'Address 2',
-    dataIndex: 'address2',
-  },
-  {
-    title: 'Address 3',
-    dataIndex: 'address3',
-  },
-
   {
     title: 'Operation',
     dataIndex: 'operation',
-    width: '8%',
+    width: '7%',
   },
 ];
 const dataSource = ref([
 ]);
-const count = computed(() => dataSource.value.length + 1);
 const editableData = reactive({});
 const edit = _id => {
   editableData[_id] = cloneDeep(dataSource.value.filter(item => _id === item._id)[0]);
@@ -77,18 +72,17 @@ const save = _id => {
   Object.assign(dataSource.value.filter(item => _id === item._id)[0], editableData[_id]);
   delete editableData[_id];
 };
-const onDelete = (_id) => {
-  console.log(_id);
-  const response = axios.delete(`http://localhost:3000/user/${_id}`)
-};
-const handleAdd = () => {
-  const newData = {
-    _id: `${count.value}`,
-    name: `Edward King ${count.value}`,
-    age: 32,
-    address: `London, Park Lane no. ${count.value}`,
-  };
-  dataSource.value.push(newData);
+
+const onDelete = async (_id) => {
+  try {
+    console.log(_id);
+    const response = await axios.delete(`http://localhost:3000/user/${_id}`)
+    console.log(response)
+    dataSource.value = dataSource.value.filter(item => item._id !== _id);
+  }
+  catch(e){
+    console.log('Error:', e.message);
+  }
 };
 
 </script>
@@ -96,8 +90,7 @@ const handleAdd = () => {
 <template>
   <div class="p-6">
     <Drawer/>
-    <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add New</a-button>
-    <a-table bordered :data-source="dataSource" :columns="columns" class="">
+    <a-table bordered :data-source="dataSource" :columns="columns" class="" :key="dataSource">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
           <div class="editable-cell">

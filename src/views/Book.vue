@@ -1,7 +1,9 @@
 <script setup>
-
+import BookTable from "../components/Table/BookTable/index.vue"
 </script>
 
 <template>
-  <div></div>
+  <div>
+    <BookTable/>
+  </div>
 </template>

@@ -14,56 +14,85 @@
     <a-form :model="form" :rules="rules" layout="vertical">
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="Name" name="name">
-            <a-input v-model:value="form.name" placeholder="Please enter user name" />
+          <a-form-item label="Username" name="username">
+            <a-input v-model:value="form.username" placeholder="Please enter user name" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="Url" name="url">
-            <a-input
-              v-model:value="form.url"
-              style="width: 100%"
-              addon-before="http://"
-              addon-after=".com"
-              placeholder="please enter url"
-            />
+          <a-form-item label="Password" name="password">
+            <a-input-password v-model:value="form.password" placeholder="Please enter password" />
           </a-form-item>
         </a-col>
       </a-row>
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="Owner" name="owner">
-            <a-select v-model:value="form.owner" placeholder="Please a-s an owner">
-              <a-select-option value="xiao">Xiaoxiao Fu</a-select-option>
-              <a-select-option value="mao">Maomao Zhou</a-select-option>
-            </a-select>
+          <a-form-item label="Full name" name="fullname">
+            <a-input  v-model:value="form.fullname" placeholder="Please enter Full name" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="Type" name="type">
-            <a-select v-model:value="form.type" placeholder="Please choose the type">
-              <a-select-option value="private">Private</a-select-option>
-              <a-select-option value="public">Public</a-select-option>
+          <a-form-item label="Role" name="role">
+            <a-select v-model:value="form.role" placeholder="Select role">
+              <a-select-option value="user">User</a-select-option>
+              <a-select-option value="admin">Admin</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
       </a-row>
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="Approver" name="approver">
-            <a-select v-model:value="form.approver" placeholder="Please choose the approver">
-              <a-select-option value="jack">Jack Ma</a-select-option>
-              <a-select-option value="tom">Tom Liu</a-select-option>
-            </a-select>
+          <a-form-item label="Email" name="email">
+            <a-input v-model:value="form.email" placeholder="Please enter email" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="DateTime" name="dateTime">
+          <a-form-item label="Phone Number" name="phone">
+            <a-input v-model:value="form.phone" placeholder="Please enter phone" />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="8">
+          <a-form-item label="Birth Day" name="birthday">
             <a-date-picker
-              v-model:value="form.dateTime"
+              v-model:value="form.birthday"
               style="width: 100%"
               :get-popup-container="trigger => trigger.parentElement"
             />
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-item label="Age" name="age">
+            <a-input v-model:value="form.age" placeholder="Please enter age" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-item label="Gender" name="gender">
+            <a-select v-model:value="form.gender" placeholder="Please choose gender">
+              <a-select-option value="Male">User</a-select-option>
+              <a-select-option value="Female">Admin</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="24">
+          <a-form-item label="Address 1" name="address1">
+            <a-input v-model:value="form.address1" placeholder="Please enter address 1" />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="24">
+          <a-form-item label="Address 2" name="address2">
+            <a-input v-model:value="form.address2" placeholder="Please enter address 2" />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="24">
+          <a-form-item label="Address 3" name="address3">
+            <a-input v-model:value="form.address3" placeholder="Please enter address 3" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -99,49 +128,19 @@ const form = reactive({
   description: '',
 });
 const rules = {
-  name: [
-    {
-      required: true,
-      message: 'Please enter user name',
-    },
-  ],
-  url: [
-    {
-      required: true,
-      message: 'please enter url',
-    },
-  ],
-  owner: [
-    {
-      required: true,
-      message: 'Please select an owner',
-    },
-  ],
-  type: [
-    {
-      required: true,
-      message: 'Please choose the type',
-    },
-  ],
-  approver: [
-    {
-      required: true,
-      message: 'Please choose the approver',
-    },
-  ],
-  dateTime: [
-    {
-      required: true,
-      message: 'Please choose the dateTime',
-      type: 'object',
-    },
-  ],
-  description: [
-    {
-      required: true,
-      message: 'Please enter url description',
-    },
-  ],
+  username: [{required:true,message: 'Please enter user name'}],
+  password: [{required:true,message: 'please enter password'}],
+  fullname: [{required:true,message: 'Please enter full name'}],
+  role: [{required:true,message: 'Please choose role'}],
+  email: [{required:true,message: 'Please enter email'}],
+  phone: [{message: 'Please enter phone '}],
+  birthday: [{required:true,message: 'Please choose Birth Day'}],
+  age: [{message: 'Please enter age'}],
+  gender: [{message: 'Please choose gender'}],
+  address1: [{message: 'Please enter address '}],
+  address2: [{message: 'Please enter address'}],
+  address3: [{message: 'Please enter address'}],
+  description: [{message: 'Please enter url description'}]
 };
 const open = ref(false);
 const showDrawer = () => {

@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="" style="height: 2000px">
+  <div class="">
     <Sidebar/>
     <div class="h-full">
       <Header />
