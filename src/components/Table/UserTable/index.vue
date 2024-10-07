@@ -18,33 +18,27 @@ const columns = [
   {
     title: 'Age',
     dataIndex: 'age',
-    width: '3%'
   },
   {
     title: 'Gender',
     dataIndex: 'gender',
-    width: '8%'
   },
   {
     title: 'Username',
     dataIndex: 'username',
-    width: '8%'
   },
   {
     title: 'Password',
     dataIndex: 'password',
-    width: '8%'
   },
   {
     title: 'Email',
     dataIndex: 'email',
-    width: '8%'
   },
   
   {
     title: 'Phone',
     dataIndex: 'phone',
-    width: '8%'
   },
   {
     title: 'Address 1',
@@ -62,12 +56,10 @@ const columns = [
   {
     title: 'Operation',
     dataIndex: 'operation',
-    width: '8%',
   },
 ];
 const dataSource = ref([
 ]);
-const count = computed(() => dataSource.value.length + 1);
 const editableData = reactive({});
 const edit = _id => {
   editableData[_id] = cloneDeep(dataSource.value.filter(item => _id === item._id)[0]);
@@ -93,8 +85,8 @@ const onDelete = async (_id) => {
 
 <template>
   <div class="p-6">
-    <Drawer/>
-    <a-table bordered :data-source="dataSource" :columns="columns" class="" :key="dataSource">
+    <Drawer :dataSource="dataSource"/>
+    <a-table bordered :data-source="dataSource" :columns="columns" class="" >
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
           <div class="editable-cell">

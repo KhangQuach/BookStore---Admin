@@ -3,7 +3,7 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import { cloneDeep, result } from 'lodash-es';
 import Drawer from "../../Drawer/index.vue"
 import axios from 'axios';
-import { DeleteOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
 
 onMounted( async ()=> {
   const { data } = await axios.get('http://localhost:3000/book')
@@ -76,7 +76,7 @@ const save = _id => {
 const onDelete = async (_id) => {
   try {
     console.log(_id);
-    const response = await axios.delete(`http://localhost:3000/user/${_id}`)
+    const response = await axios.delete(`http://localhost:3000/book/${_id}`)
     console.log(response)
     dataSource.value = dataSource.value.filter(item => item._id !== _id);
   }
@@ -84,12 +84,62 @@ const onDelete = async (_id) => {
     console.log('Error:', e.message);
   }
 };
-
+const sortByName = () =>{
+    dataSource.value.sort((a, b) => {
+    const nameA = a.name || '';
+    const nameB = b.name || '';
+    return nameA.localeCompare(nameB);
+  })
+}
+const sortByCategory = () =>{
+    dataSource.value.sort((a, b) => {
+    const nameA = a.category || '';
+    const nameB = b.category || '';
+    return nameA.localeCompare(nameB);
+  })
+}
+const sortByPrice = () =>{
+    dataSource.value.sort((a, b) => {
+    const nameA = a.price || '';
+    const nameB = b.price || '';
+    return nameA.localeCompare(nameB);
+  })
+}
+const sortByAuthor = () =>{
+    dataSource.value.sort((a, b) => {
+    const nameA = a.author || '';
+    const nameB = b.author || '';
+    return nameA.localeCompare(nameB);
+  })
+}
 </script>
 
 <template>
   <div class="p-6">
-    <Drawer/>
+    <div class="flex mb-3 gap-3">
+      <!-- Book Drawer -->
+      <Drawer/>
+      <!-- Sort -->
+
+      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottom">
+        <a-button class="flex items-center"><SortAscendingOutlined /></a-button>
+        <template #content>
+          <div class="flex gap-2">
+            <a-button @click="sortByName">Name</a-button>
+            <a-button @click="sortByCategory">Category</a-button>
+            <a-button @click="sortByPrice">Price</a-button>
+            <a-button @click="sortByAuthor">Author</a-button>
+          </div>
+        </template>
+      </a-popover>
+      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottom">
+        <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
+        <template #content>
+          123
+        </template>
+      </a-popover>
+
+    </div>
     <a-table bordered :data-source="dataSource" :columns="columns" class="" :key="dataSource">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">

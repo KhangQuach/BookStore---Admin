@@ -1,3 +1,70 @@
+<script setup>
+import axios from 'axios';
+import { reactive, ref } from 'vue';
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import { defineProps } from 'vue';
+const props = defineProps({
+  dataSource : Array
+})
+const form = reactive({
+  username: '', password: '', fullname: '',
+  role: '', email: '', phone: '', birthday: null,
+  age: null, gender: '', address1: '',
+  address2: '', address3: '', description: '',
+});
+const rules = {
+  username: [{required:true,message: 'Please enter user name'}],
+  password: [{required:true,message: 'please enter password'}],
+  fullname: [{required:true,message: 'Please enter full name'}],
+  role: [{required:true,message: 'Please choose role'}],
+  email: [{required:true,message: 'Please enter email'}],
+  phone: [{required:true,message: 'Please enter phone '}],
+  birthday: [{required:true,message: 'Please choose Birth Day',type: 'object',}],
+  age: [{required:true,message: 'Please enter age'}],
+  gender: [{required:true,message: 'Please choose gender'}],
+  address1: [{message: 'Please enter address '}],
+  address2: [{message: 'Please enter address'}],
+  address3: [{message: 'Please enter address'}],
+  description: [{message: 'Please enter url description'}]
+};
+const open = ref(false);
+const showDrawer = () => {
+  open.value = true;
+};
+const onClose = () => {
+  open.value = false;
+};
+const onSubmit = async () =>{
+  if(form.username && form.password && form.fullname && form.role && form.email && form.phone && form.birthday && form.age && form.gender){
+    try{
+      const { data } = await axios.post('http://localhost:3000/user',form)
+      if(data.success === false){
+        toast("Failed to add user!", {
+          "type": "error",
+          "position": "bottom-left",
+          "transition": "slide",
+          "dangerouslyHTMLString": true
+        })
+      }
+      console.log(data)
+      props.dataSource = [...props.dataSource, data]
+    }
+    catch(e){
+      console.log(e.message)
+    }
+    open.value = false;
+  }
+  else{
+    toast("Please fill out form!", {
+  "type": "error",
+  "position": "bottom-left",
+  "transition": "slide",
+  "dangerouslyHTMLString": true
+})
+  }
+}
+</script>
 <template>
   <a-button @click="showDrawer">
     <template #icon><PlusOutlined /></template>
@@ -5,7 +72,7 @@
   </a-button>
   <a-drawer
     title="Create a new account"
-    :width="720"
+    :width="620"
     :open="open"
     :body-style="{ paddingBottom: '80px' }"
     :footer-style="{ textAlign: 'right' }"
@@ -63,14 +130,14 @@
         </a-col>
         <a-col :span="8">
           <a-form-item label="Age" name="age">
-            <a-input v-model:value="form.age" placeholder="Please enter age" />
+            <a-input-number class="w-full" v-model:value="form.age" placeholder="Please enter age" :min="1" :max="100" />
           </a-form-item>
         </a-col>
         <a-col :span="8">
           <a-form-item label="Gender" name="gender">
             <a-select v-model:value="form.gender" placeholder="Please choose gender">
-              <a-select-option value="Male">User</a-select-option>
-              <a-select-option value="Female">Admin</a-select-option>
+              <a-select-option value="male">Male</a-select-option>
+              <a-select-option value="female">Female</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -111,42 +178,8 @@
     <template #extra>
       <a-space>
         <a-button @click="onClose">Cancel</a-button>
-        <a-button type="primary" @click="onClose">Submit</a-button>
+        <a-button type="primary" @click="onSubmit">Submit</a-button>
       </a-space>
     </template>
   </a-drawer>
 </template>
-<script setup>
-import { reactive, ref } from 'vue';
-const form = reactive({
-  name: '',
-  url: '',
-  owner: '',
-  type: '',
-  approver: '',
-  dateTime: null,
-  description: '',
-});
-const rules = {
-  username: [{required:true,message: 'Please enter user name'}],
-  password: [{required:true,message: 'please enter password'}],
-  fullname: [{required:true,message: 'Please enter full name'}],
-  role: [{required:true,message: 'Please choose role'}],
-  email: [{required:true,message: 'Please enter email'}],
-  phone: [{message: 'Please enter phone '}],
-  birthday: [{required:true,message: 'Please choose Birth Day'}],
-  age: [{message: 'Please enter age'}],
-  gender: [{message: 'Please choose gender'}],
-  address1: [{message: 'Please enter address '}],
-  address2: [{message: 'Please enter address'}],
-  address3: [{message: 'Please enter address'}],
-  description: [{message: 'Please enter url description'}]
-};
-const open = ref(false);
-const showDrawer = () => {
-  open.value = true;
-};
-const onClose = () => {
-  open.value = false;
-};
-</script>

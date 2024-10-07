@@ -1,7 +1,10 @@
 <script setup>
 import { BellOutlined, MailOutlined } from '@ant-design/icons-vue';
 import Avatar from "./Avatar/index.vue"
-
+import { ref } from 'vue';
+const search = ref("")
+const onSearch = () =>{
+}
 </script>
 
 <template>
@@ -19,7 +22,7 @@ import Avatar from "./Avatar/index.vue"
       </a-button>
     </a-badge>
     <a-input-search
-      v-model:value="value"
+      v-model:value="search"
       placeholder="input search text"
       enter-button
       @search="onSearch"
