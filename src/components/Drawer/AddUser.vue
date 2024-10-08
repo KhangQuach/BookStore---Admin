@@ -47,8 +47,8 @@ const onSubmit = async () =>{
           "dangerouslyHTMLString": true
         })
       }
-      console.log(data)
-      props.dataSource = [...props.dataSource, data]
+      console.log(data.result)
+      props.dataSource = [...props.dataSource, data.result]
     }
     catch(e){
       console.log(e.message)
