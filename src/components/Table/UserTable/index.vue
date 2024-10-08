@@ -5,11 +5,13 @@ import AddUserDrawer from "../../Drawer/AddUser.vue"
 import UpdateUserDrawer from "../../Drawer/UpdateUser.vue"
 import axios from 'axios';
 import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
-
+import { sort } from 'fast-sort';
 onMounted( async ()=> {
   const { data } = await axios.get('http://localhost:3000/user')
   dataSource.value = data
 })
+
+// COLUMN USER
 const columns = [
   {
     title: 'Name',
@@ -23,6 +25,10 @@ const columns = [
   {
     title: 'Gender',
     dataIndex: 'gender',
+  },
+  {
+    title: 'Role',
+    dataIndex: 'role',
   },
   {
     title: 'Username',
@@ -81,12 +87,15 @@ const onDelete = async (_id) => {
     console.log('Error:', e.message);
   }
 };
+
+// SORT DATA
 const sortByName = () =>{
-  dataSource.value.sort((a, b) => {
-    const nameA = a.fullname || '';
-    const nameB = b.fullname || '';
-    return nameA.localeCompare(nameB);
-  })
+}
+const sortByAge = () =>{
+}
+const sortByGender = () =>{
+}
+const sortByRole = () =>{
 }
 </script>
 
@@ -94,27 +103,25 @@ const sortByName = () =>{
   <div class="p-6">
     <div class="flex mb-3 gap-3">
       <!-- Book AddUserDrawer -->
-      <AddUserDrawer/>
+      <AddUserDrawer :dataSource="dataSource"/>
       <!-- Sort -->
-
-      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottom">
+      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottomLeft">
         <a-button class="flex items-center"><SortAscendingOutlined /></a-button>
         <template #content>
           <div class="flex gap-2">
             <a-button @click="sortByName">Name</a-button>
             <a-button @click="sortByAge">Age</a-button>
             <a-button @click="sortByGender">Gender</a-button>
-            <a-button @click="sortByUsername">Username</a-button>
+            <a-button @click="sortByRole">Role</a-button>
           </div>
         </template>
       </a-popover>
-      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottom">
+      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottomLeft">
         <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
         <template #content>
           123
         </template>
       </a-popover>
-
     </div>
     <a-table bordered :data-source="dataSource" :columns="columns" class="" >
       <template #bodyCell="{ column, text, record }">

@@ -121,7 +121,7 @@ const sortByAuthor = () =>{
        
       <!-- Sort -->
 
-      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottom">
+      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottomLeft">
         <a-button class="flex items-center"><SortAscendingOutlined /></a-button>
         <template #content>
           <div class="flex gap-2">
@@ -132,7 +132,7 @@ const sortByAuthor = () =>{
           </div>
         </template>
       </a-popover>
-      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottom">
+      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottomLeft">
         <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
         <template #content>
           123

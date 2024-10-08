@@ -6,20 +6,21 @@ import "vue3-toastify/dist/index.css";
 import { defineProps } from 'vue';
 import { SettingOutlined } from '@ant-design/icons-vue';
 import { handleStringDate, handleObjectDate } from '../../utils/helpers/handleDate.js';
+import moment from 'moment';
 const props = defineProps({
   record_id : String
 })
 const form = reactive({})
 const rules = {
-  username: [{required:true,message: 'Please enter user name'}],
-  password: [{required:true,message: 'please enter password'}],
-  fullname: [{required:true,message: 'Please enter full name'}],
-  role: [{required:true,message: 'Please choose role'}],
-  email: [{required:true,message: 'Please enter email'}],
-  phone: [{required:true,message: 'Please enter phone '}],
-  birthday: [{required:true,message: 'Please choose Birth Day'}],
-  age: [{required:true,message: 'Please enter age'}],
-  gender: [{required:true,message: 'Please choose gender'}],
+  username: [{message: 'Please enter user name'}],
+  password: [{message: 'please enter password'}],
+  fullname: [{message: 'Please enter full name'}],
+  role: [{message: 'Please choose role'}],
+  email: [{message: 'Please enter email'}],
+  phone: [{message: 'Please enter phone '}],
+  birthday: [{message: 'Please choose Birth Day',type:'object'}],
+  age: [{message: 'Please enter age'}],
+  gender: [{message: 'Please choose gender'}],
   address1: [{message: 'Please enter address '}],
   address2: [{message: 'Please enter address'}],
   address3: [{message: 'Please enter address'}],
@@ -30,6 +31,7 @@ const showDrawer = async () => {
   try{
     const {data} = await axios.get(`http://localhost:3000/user/${props.record_id}`)
     form.value = data
+    form.value.birthday = moment(handleStringDate(data.birthday))
     open.value = true;
   }
   catch(e){
@@ -40,8 +42,29 @@ const onClose = () => {
   open.value = false;
 };
 const onSubmit = async () =>{
-  console.log(form.value.birthday)
-  // console.log(props.record_id)
+  try{
+    const result = await axios.patch(`http://localhost:3000/user/${props.record_id}`,form.value)
+    console.log(result)
+    if(result){
+      open.value = false
+      toast("Updated! Please refresh page", {
+        "type": "success",
+        "position": "bottom-left",
+        "transition": "slide",
+      })
+    }
+    else{
+      toast("Cant Update!", {
+      "type": "error",
+      "position": "bottom-left",
+      "transition": "slide",
+      "dangerouslyHTMLString": true
+    })
+    }
+  }
+  catch(e){
+    console.log(e)
+  }
 }
 </script>
 <template>
@@ -102,6 +125,7 @@ const onSubmit = async () =>{
         <a-col :span="8">
           <a-form-item label="Birth Day" name="birthday">
             <a-date-picker
+              
               v-model:value="form.value.birthday"
               style="width: 100%"
               :get-popup-container="trigger => trigger.parentElement"

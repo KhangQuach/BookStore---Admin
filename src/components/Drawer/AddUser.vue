@@ -7,6 +7,7 @@ import { defineProps } from 'vue';
 const props = defineProps({
   dataSource : Array
 })
+
 const form = reactive({
   username: '', password: '', fullname: '',
   role: '', email: '', phone: '', birthday: null,
@@ -47,7 +48,14 @@ const onSubmit = async () =>{
           "dangerouslyHTMLString": true
         })
       }
-      console.log(data.result)
+      else{
+        toast("User added successfully!", {
+          "type": "success",
+          "position": "bottom-left",
+          "transition": "slide",
+          "dangerouslyHTMLString": true
+        })
+      }
       props.dataSource = [...props.dataSource, data.result]
     }
     catch(e){
@@ -57,11 +65,11 @@ const onSubmit = async () =>{
   }
   else{
     toast("Please fill out form!", {
-  "type": "error",
-  "position": "bottom-left",
-  "transition": "slide",
-  "dangerouslyHTMLString": true
-})
+      "type": "error",
+      "position": "bottom-left",
+      "transition": "slide",
+      "dangerouslyHTMLString": true
+    })
   }
 }
 </script>
