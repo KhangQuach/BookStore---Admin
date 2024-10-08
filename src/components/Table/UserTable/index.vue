@@ -1,9 +1,10 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import { cloneDeep, result } from 'lodash-es';
-import Drawer from "../../Drawer/index.vue"
+import AddUserDrawer from "../../Drawer/AddUser.vue"
+import UpdateUserDrawer from "../../Drawer/UpdateUser.vue"
 import axios from 'axios';
-import { DeleteOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
 
 onMounted( async ()=> {
   const { data } = await axios.get('http://localhost:3000/user')
@@ -12,7 +13,7 @@ onMounted( async ()=> {
 const columns = [
   {
     title: 'Name',
-    dataIndex: 'username',
+    dataIndex: 'fullname',
     width: '12%',
   },
   {
@@ -59,7 +60,7 @@ const columns = [
   },
 ];
 const dataSource = ref([
-]);
+]); 
 const editableData = reactive({});
 const edit = _id => {
   editableData[_id] = cloneDeep(dataSource.value.filter(item => _id === item._id)[0]);
@@ -80,12 +81,41 @@ const onDelete = async (_id) => {
     console.log('Error:', e.message);
   }
 };
-
+const sortByName = () =>{
+  dataSource.value.sort((a, b) => {
+    const nameA = a.fullname || '';
+    const nameB = b.fullname || '';
+    return nameA.localeCompare(nameB);
+  })
+}
 </script>
 
 <template>
   <div class="p-6">
-    <Drawer :dataSource="dataSource"/>
+    <div class="flex mb-3 gap-3">
+      <!-- Book AddUserDrawer -->
+      <AddUserDrawer/>
+      <!-- Sort -->
+
+      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottom">
+        <a-button class="flex items-center"><SortAscendingOutlined /></a-button>
+        <template #content>
+          <div class="flex gap-2">
+            <a-button @click="sortByName">Name</a-button>
+            <a-button @click="sortByAge">Age</a-button>
+            <a-button @click="sortByGender">Gender</a-button>
+            <a-button @click="sortByUsername">Username</a-button>
+          </div>
+        </template>
+      </a-popover>
+      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottom">
+        <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
+        <template #content>
+          123
+        </template>
+      </a-popover>
+
+    </div>
     <a-table bordered :data-source="dataSource" :columns="columns" class="" >
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -102,16 +132,14 @@ const onDelete = async (_id) => {
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="flex gap-2">
-            <a-button type="primary" class="flex justify-center items-center px-4">
-              <SettingOutlined />
-            </a-button>
+            <UpdateUserDrawer :record_id="record._id"/>
             <a-popconfirm
               placement="bottomLeft"
               v-if="dataSource.length"
               title="Sure to delete?"
               @confirm="onDelete(record._id)"
             >
-              <a-button type="primary" danger class="flex justify-center items-center px-4">
+              <a-button type="primary" danger class="flex justify-center items-center">
                 <DeleteOutlined />
               </a-button>
             </a-popconfirm>

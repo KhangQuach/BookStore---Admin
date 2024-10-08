@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import { cloneDeep, result } from 'lodash-es';
-import Drawer from "../../Drawer/index.vue"
+import Drawer from "../../Drawer/AddUser.vue"
 import axios from 'axios';
 import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
 
@@ -85,7 +85,7 @@ const onDelete = async (_id) => {
   }
 };
 const sortByName = () =>{
-    dataSource.value.sort((a, b) => {
+  dataSource.value.sort((a, b) => {
     const nameA = a.name || '';
     const nameB = b.name || '';
     return nameA.localeCompare(nameB);
@@ -118,7 +118,7 @@ const sortByAuthor = () =>{
   <div class="p-6">
     <div class="flex mb-3 gap-3">
       <!-- Book Drawer -->
-      <Drawer/>
+       
       <!-- Sort -->
 
       <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottom">
