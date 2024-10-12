@@ -4,6 +4,7 @@ import { reactive, ref } from 'vue';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { defineProps } from 'vue';
+import { UserAddOutlined } from '@ant-design/icons-vue';
 const props = defineProps({
   dataSource : Array
 })
@@ -55,13 +56,13 @@ const onSubmit = async () =>{
           "transition": "slide",
           "dangerouslyHTMLString": true
         })
+        open.value = false;
       }
       props.dataSource = [...props.dataSource, data.result]
     }
     catch(e){
       console.log(e.message)
     }
-    open.value = false;
   }
   else{
     toast("Please fill out form!", {
@@ -74,9 +75,9 @@ const onSubmit = async () =>{
 }
 </script>
 <template>
-  <a-button @click="showDrawer">
-    <template #icon><PlusOutlined /></template>
-    Add new
+  <a-button @click="showDrawer" class="flex items-center">
+    <template #icon><UserAddOutlined /></template>
+    Add user
   </a-button>
   <a-drawer
     title="Create a new account"

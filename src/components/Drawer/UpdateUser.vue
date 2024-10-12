@@ -5,8 +5,8 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { defineProps } from 'vue';
 import { SettingOutlined } from '@ant-design/icons-vue';
-import { handleStringDate, handleObjectDate } from '../../utils/helpers/handleDate.js';
-import moment from 'moment';
+import { handleStringDate, handleObjectDate } from '../../utils/helpers/handleDate.js'
+import dayjs from 'dayjs'
 const props = defineProps({
   record_id : String
 })
@@ -30,9 +30,12 @@ const open = ref(false);
 const showDrawer = async () => {
   try{
     const {data} = await axios.get(`http://localhost:3000/user/${props.record_id}`)
-    form.value = data
-    form.value.birthday = moment(handleStringDate(data.birthday))
-    open.value = true;
+    if(data){
+      open.value = true
+      form.value = data
+      form.value.birthday = dayjs(handleObjectDate(form.value.birthday))
+      console.log(form.value.birthday)
+    }
   }
   catch(e){
     console.log(e)

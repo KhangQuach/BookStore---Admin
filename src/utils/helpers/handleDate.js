@@ -10,3 +10,18 @@ export const handleObjectDate = (timestamp) =>{
   const date = new Date(timestamp);
   return date;
 }
+
+export const getDay = (timestamp) => {
+  const date = new Date(timestamp)
+  return date.getDay()
+}
+
+export const getMonth = (timestamp) => {
+  const date = new Date(timestamp)
+  return date.getMonth() + 1
+}
+
+export const getYear = (timestamp) => {
+  const date = new Date(timestamp)
+  return date.getFullYear()
+}

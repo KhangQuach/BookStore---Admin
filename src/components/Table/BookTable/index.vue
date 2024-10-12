@@ -4,6 +4,7 @@ import { cloneDeep, result } from 'lodash-es';
 import Drawer from "../../Drawer/AddUser.vue"
 import axios from 'axios';
 import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
+import AddBookDrawer from '../../../components/Drawer/AddBook.vue'
 
 onMounted( async ()=> {
   const { data } = await axios.get('http://localhost:3000/book')
@@ -116,12 +117,14 @@ const sortByAuthor = () =>{
 
 <template>
   <div class="p-6">
-    <div class="flex mb-3 gap-3">
-      <!-- Book Drawer -->
-       
-      <!-- Sort -->
-
-      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottomLeft">
+    <div class="flex mb-3 gap-3 justify-between">
+      <!-- Add Book Drawer -->
+      <div>
+        <AddBookDrawer :dataSource="dataSource"/>
+      </div>
+      <div class="flex gap-3">
+        <!-- Sort -->
+        <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottomLeft">
         <a-button class="flex items-center"><SortAscendingOutlined /></a-button>
         <template #content>
           <div class="flex gap-2">
@@ -131,14 +134,22 @@ const sortByAuthor = () =>{
             <a-button @click="sortByAuthor">Author</a-button>
           </div>
         </template>
-      </a-popover>
-      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottomLeft">
-        <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
-        <template #content>
-          123
-        </template>
-      </a-popover>
-
+        </a-popover>
+        <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottomLeft">
+          <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
+          <template #content>
+            123
+          </template>
+        </a-popover>
+        <!-- Search -->
+        <a-input-search
+          v-model:value="search"
+          placeholder="input search text"
+          enter-button
+          @search="onSearch"
+          class="w-60"
+        />
+      </div>
     </div>
     <a-table bordered :data-source="dataSource" :columns="columns" class="" :key="dataSource">
       <template #bodyCell="{ column, text, record }">

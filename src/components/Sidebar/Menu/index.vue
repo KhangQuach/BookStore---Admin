@@ -36,6 +36,7 @@ const items = reactive([
       getItem('Home', '/'),
       getItem('User', '/user'),
       getItem('Book', '/book'),
+      getItem('Borrow List', '/borrow-list'),
     ],
     'group'
   ),

@@ -65,8 +65,7 @@ const columns = [
     dataIndex: 'operation',
   },
 ];
-const dataSource = ref([
-]); 
+const dataSource = ref([]); 
 const editableData = reactive({});
 const edit = _id => {
   editableData[_id] = cloneDeep(dataSource.value.filter(item => _id === item._id)[0]);
@@ -101,27 +100,39 @@ const sortByRole = () =>{
 
 <template>
   <div class="p-6">
-    <div class="flex mb-3 gap-3">
-      <!-- Book AddUserDrawer -->
-      <AddUserDrawer :dataSource="dataSource"/>
-      <!-- Sort -->
-      <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottomLeft">
+    <div class="flex mb-3 gap-3 justify-between">
+      <!-- Add User Drawer -->
+      <div>
+        <AddUserDrawer :dataSource="dataSource"/>
+      </div>
+      <div class="flex gap-3">
+        <!-- Sort -->
+        <a-popover v-model:open="visible" title="Sort Ascending" trigger="click" placement="bottomLeft">
         <a-button class="flex items-center"><SortAscendingOutlined /></a-button>
         <template #content>
           <div class="flex gap-2">
             <a-button @click="sortByName">Name</a-button>
-            <a-button @click="sortByAge">Age</a-button>
-            <a-button @click="sortByGender">Gender</a-button>
-            <a-button @click="sortByRole">Role</a-button>
+            <a-button @click="sortByCategory">Category</a-button>
+            <a-button @click="sortByPrice">Price</a-button>
+            <a-button @click="sortByAuthor">Author</a-button>
           </div>
         </template>
-      </a-popover>
-      <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottomLeft">
-        <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
-        <template #content>
-          123
-        </template>
-      </a-popover>
+        </a-popover>
+        <a-popover v-model:open="visible" title="Sort Descending" trigger="click" placement="bottomLeft">
+          <a-button class="flex items-center"><SortDescendingOutlined /></a-button>
+          <template #content>
+            123
+          </template>
+        </a-popover>
+        <!-- Search -->
+        <a-input-search
+          v-model:value="search"
+          placeholder="input search text"
+          enter-button
+          @search="onSearch"
+          class="w-60"
+        />
+      </div>
     </div>
     <a-table bordered :data-source="dataSource" :columns="columns" class="" >
       <template #bodyCell="{ column, text, record }">

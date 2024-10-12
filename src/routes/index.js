@@ -6,6 +6,7 @@ import SignIn from '../views/Sign-in.vue';
 import BookView from '../views/Book.vue';
 import Home from '../views/Home.vue';
 import SignUp from '../views/Sign-up.vue';
+import BorrowList from '../views/BorrowList.vue'
 const router = createRouter({
   history: createWebHistory('/'),
   routes: [
@@ -56,6 +57,11 @@ const router = createRouter({
           name: 'User',
           component: UserView
         },
+        {
+          path: '/borrow-list',
+          name: 'Borrow',
+          component: BorrowList
+        }
       ]
     }
   ]
