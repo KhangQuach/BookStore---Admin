@@ -40,6 +40,8 @@ const hide = () => {
   visible.value = false;
 };
 const handleLogout = () => {
+  localStorage.removeItem("id")
+  localStorage.removeItem("token")
   router.push("/sign-in")
 }
 const handleViewProfile = () => {

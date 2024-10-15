@@ -1,7 +1,7 @@
 
 <template>
   <div class="absolute w-[420px] h-fit h-52 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-16 px-12 rounded-md border shadow-md">
-    <h1 class="text-center mb-7 font-bold text-[22px] text-blue-400">BOOK CORNER</h1>
+    <h1 class="text-center mb-7 font-bold text-[22px] text-blue-500">BOOK CORNER</h1>
     <a-form
     :model="formState"
     name="normal_login"
@@ -51,25 +51,60 @@
   </div>
 </template>
 <script setup>
-import { LockOutlined, UserOutlined } from '@ant-design/icons-vue';
-import { reactive, computed } from 'vue';
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
+import axios from 'axios'
+import { reactive, computed } from 'vue'
+import router from '../routes'
+import { toast } from 'vue3-toastify';
 const formState = reactive({
   username: '',
   password: '',
-  remember: true,
-});
-const onFinish = values => {
-  console.log('Success:', values);
-};
+})
+const onFinish = async (values) => {
+  try{
+    const response =  await axios.post('http://localhost:3000/login', formState)
+    console.log(response)
+    if(response.data.success) {
+      toast("Login successfully!", {
+        "type": "success",
+        "position": "bottom-left",
+        "transition": "slide",
+        "dangerouslyHTMLString": true
+      })
+      setTimeout(() => {
+        localStorage.setItem("id", response.data.id)
+        localStorage.setItem('token', response.data.token)
+        router.push('/')
+      }, 3000);
+    }
+    else {
+      toast.error("Invalid credentials.", {
+        "type": "error",
+        "position": "bottom-left",
+        "transition": "slide",
+        "dangerouslyHTMLString": true
+      })
+    }
+  }
+  catch(e){
+    toast.error("Oops! Something went wrong.", {
+      "type": "error",
+      "position": "bottom-left",
+      "transition": "slide",
+      "dangerouslyHTMLString": true
+    })
+    return;
+  }
+}
 const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
-};
+  console.log('Failed:', errorInfo)
+}
 const disabled = computed(() => {
-  return !(formState.username && formState.password);
-});
+  return !(formState.username && formState.password)
+})
 </script>
 <style scoped>
 #components-form-demo-normal-login .login-form-forgot {
-  float: right;
+  float: right
 }
 </style>
