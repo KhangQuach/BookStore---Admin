@@ -8,8 +8,7 @@ const onSearch = () =>{
 </script>
 
 <template>
-  <div class="h-16  fixed w-full bg-white z-10 border-b-2 flex flex-row-reverse items-center gap-3">
-    
+  <div class="h-16  fixed w-full z-10 border-b-2 flex flex-row-reverse items-center gap-3 bg-white">
     <Avatar/>
     <a-badge :count="0">
       <a-button class="flex justify-center items-center">
