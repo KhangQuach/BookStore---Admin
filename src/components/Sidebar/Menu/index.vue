@@ -33,7 +33,7 @@ const items = reactive([
     'grp',
     null,
     [
-      getItem('Home', '/'),
+      getItem('Dashboard', '/'),
       getItem('User', '/user'),
       getItem('Book', '/book'),
       getItem('Borrow List', '/borrow-list'),
