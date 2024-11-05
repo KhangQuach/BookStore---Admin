@@ -1,7 +1,8 @@
-<script>
+<script setup>
+import BorrowTable from "../components/Table/BorrowTable/index.vue"
 </script>
 <template>
   <div class="">
-      <a-empty />
+    <BorrowTable />
   </div>
 </template>

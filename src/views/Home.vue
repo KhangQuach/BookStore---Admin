@@ -3,9 +3,13 @@ import { onMounted, reactive, ref } from 'vue';
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import axios from 'axios';
+import router from '../routes';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 onMounted(async () =>{
+  if(!localStorage.getItem("id")){
+    router.push("sign-in")
+  }
   const roles = ['user', 'admin']
   const borrows = ['pending, success, expired']
   const categorys = ['children','horror','romance', 'thriller', 'cookbook','travel','other']
