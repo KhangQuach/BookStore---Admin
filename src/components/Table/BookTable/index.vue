@@ -1,11 +1,10 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import { cloneDeep, result } from 'lodash-es';
-import Drawer from "../../Drawer/AddUser.vue"
 import axios from 'axios';
 import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
 import AddBookDrawer from '../../../components/Drawer/AddBook.vue'
-
+import UpdateBookDrawer from '../../../components/Drawer/UpdateBook.vue'
 onMounted( async ()=> {
   const { data } = await axios.get('http://localhost:3000/book')
   dataSource.value = data
@@ -152,7 +151,7 @@ const sortByAuthor = () =>{
       </div>
     </div>
     <a-table bordered :data-source="dataSource" :columns="columns" class="" :key="dataSource">
-      <template #bodyCell="{ column, text, record }">
+      <template #bodyCell="{ column, text, record}">
         <template v-if="column.dataIndex === 'name'">
           <div class="editable-cell">
             <div v-if="editableData[record._id]" class="editable-cell-input-wrapper">
@@ -167,9 +166,7 @@ const sortByAuthor = () =>{
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="flex gap-2">
-            <a-button type="primary" class="flex justify-center items-center px-4">
-              <SettingOutlined />
-            </a-button>
+            <UpdateBookDrawer :record_id="record._id"/>
             <a-popconfirm
               placement="bottomLeft"
               v-if="dataSource.length"

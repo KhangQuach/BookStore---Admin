@@ -33,6 +33,7 @@ const showDrawer = async () => {
     if(data){
       open.value = true
       form.value = data
+      console.log(form.value)
       form.value.birthday = dayjs(handleObjectDate(form.value.birthday))
       console.log(form.value.birthday)
     }
@@ -75,7 +76,7 @@ const onSubmit = async () =>{
     <SettingOutlined/>
   </a-button>
   <a-drawer
-    title="Create a new account"
+    title="Update account"
     :width="620"
     :open="open"
     :body-style="{ paddingBottom: '80px' }"
