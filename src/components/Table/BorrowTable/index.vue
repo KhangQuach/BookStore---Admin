@@ -3,8 +3,9 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import { cloneDeep, result } from 'lodash-es';
 import Drawer from "../../Drawer/AddUser.vue"
 import axios from 'axios';
-import { DeleteOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
+import { CheckOutlined, DeleteOutlined, HourglassOutlined, SettingOutlined, SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue';
 import AddBookDrawer from '../../../components/Drawer/AddBook.vue'
+import { toast } from 'vue3-toastify';
 
 const usernames = ref([])
 const booknames = ref([])
@@ -17,7 +18,7 @@ const columns = [
   {
     title: ' User',
     dataIndex: `username`,
-    width: '15%',
+    width: '8%',
   },
   {
     title: 'Book',
@@ -77,7 +78,54 @@ const onDelete = async (_id) => {
     console.log('Error:', e.message);
   }
 };
-
+const allowBorrowBook = async (_id) => {
+  try{
+    console.log(_id)
+    const response = await axios.patch(`http://localhost:3000/borrow/update-status/${_id}`,{status: "success"})
+    console.log(response)
+    if(!response){
+      toast.error('Failed to allow borrowing');
+    }
+    if(response.data.success ===true){
+      toast("Allowed to borrow books!", {
+        "type": "success",
+        "position": "bottom-left",
+        "transition": "slide",
+      })
+    }
+    else if(response.data.success ===false && response.data.status === "success") {
+      toast("Error! Status in success", {
+        "type": "error",
+        "position": "bottom-left",
+        "transition": "slide",
+      })
+    }
+    else{
+      toast("Failed to allow borrowing", {
+        "type": "error",
+        "position": "bottom-left",
+        "transition": "slide",
+      })
+    }
+  }
+  catch(e){
+    console.log('Error:', e.message);
+  }
+}
+const sortByName = () =>{
+  dataSource.value.sort((a, b) => {
+    const nameA = a.username || '';
+    const nameB = b.username || '';
+    return nameA.localeCompare(nameB);
+  })
+}
+const sortByStatus = () =>{
+  dataSource.value.sort((a, b) => {
+    const nameA = a.status || '';
+    const nameB = b.status || '';
+    return nameA.localeCompare(nameB);
+  })
+}
 </script>
 
 <template>
@@ -94,9 +142,7 @@ const onDelete = async (_id) => {
         <template #content>
           <div class="flex gap-2">
             <a-button @click="sortByName">Name</a-button>
-            <a-button @click="sortByCategory">Category</a-button>
-            <a-button @click="sortByPrice">Price</a-button>
-            <a-button @click="sortByAuthor">Author</a-button>
+            <a-button @click="sortByStatus">status</a-button>
           </div>
         </template>
         </a-popover>
@@ -132,8 +178,11 @@ const onDelete = async (_id) => {
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="flex gap-2">
+            <a-button @click="allowBorrowBook(record._id)" type="primary" class="flex justify-center items-center px-4 button-success">
+              <CheckOutlined />
+            </a-button>
             <a-button type="primary" class="flex justify-center items-center px-4">
-              <SettingOutlined />
+              <HourglassOutlined />
             </a-button>
             <a-popconfirm
               placement="bottomLeft"
@@ -142,7 +191,7 @@ const onDelete = async (_id) => {
               @confirm="onDelete(record._id)"
             >
               <a-button type="primary" danger class="flex justify-center items-center px-4">
-                <DeleteOutlined />
+                <DeleteOutlined  />
               </a-button>
             </a-popconfirm>
           </div>
@@ -154,7 +203,22 @@ const onDelete = async (_id) => {
 
 
 <style scoped>
-
+.button-success{
+  background-color: #4caf50; /* Green */
+  color: white;
+  border: none;
+}
+.button-success:hover {
+  background-color: #45a049; /* Darker green */
+}
+.button-done{
+  background-color: #ccc; /* Green */
+  color: white;
+  border: none;
+}
+.button-done:hover {
+  background-color: #ddd; /* Darker green */
+}
 .editable-cell {
   position: relative;
   .editable-cell-input-wrapper,
