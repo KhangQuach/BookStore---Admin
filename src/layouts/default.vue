@@ -8,6 +8,9 @@ import router from "../routes";
  if(!id || !token){
   router.push("/sign-in")
  }
+ if(!localStorage.getItem("id")){
+    router.push("sign-in")
+  }
 </script>
 
 <template>
@@ -15,6 +18,7 @@ import router from "../routes";
     <Sidebar/>
     <div class="h-full">
       <Header />
+
       <div class="pt-16 ml-60 bg-gray-100 z-10 h-fit">
         <router-view/>
       </div>

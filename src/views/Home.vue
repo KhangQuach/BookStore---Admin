@@ -1,39 +1,59 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watchEffect } from 'vue';
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import axios from 'axios';
 import router from '../routes';
+import { onBeforeMount } from 'vue';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
-onMounted(async () =>{
-  if(!localStorage.getItem("id")){
-    router.push("sign-in")
-  }
-  const roles = ['user', 'admin']
-  const borrows = ['pending, success, expired']
-  const categorys = ['children','horror','romance', 'thriller', 'cookbook','travel','other']
-  try{  
-    const usersEnpoints = roles.map((role)=> {
-      axios.get(`http://localhost:3000/user/countByRole/${role}`)
-    })
-    const borrowsEnpoints = borrows.map((borrow)=>{
-      axios.get(`http://localhost:3000/book/countByCategory/${borrows}`)
-    })
-    const categoryEnpoints = categorys.map((category)=>{
-      axios.get(`http://localhost:3000/book/countByCategory/${category}`)
-    })
 
-    console.log(usersEnpoints, borrowsEnpoints, categoryEnpoints);
-  }catch(e){
-    console.error(e)
-  }
-})
+
 const data = reactive({
-  Users:[{data: [12,2]}],
-  Books:[{data: [40, 20, 30, 15,4,5, 3]}],
-  Borrows:[{ data: [40, 20, 30] }]
+  Users:[{data: [24,2]}],
+  Books:[{data: [6,8,10,7,9,7,3]}],
+  Borrows:[{ data: [10,11,4,3]}]
 })
+
+onMounted(async () => {
+  await fetchData()
+})
+
+  const fetchData = async () =>{
+    const roles = ['user', 'admin']
+    const status = ['pending', 'success', 'expired', 'deny']
+    const categories = ['children','horror','romance', 'thriller', 'cookbook','travel','other']
+    try{  
+      const usersEndpoints = roles.map((role) =>
+        axios.get(`http://localhost:3000/user/countByRole/${role}`)
+      );
+      // Borrows count by status
+      const borrowsEndpoints = status.map((item) =>
+        axios.get(`http://localhost:3000/borrow/countByStatus/${item}`)
+      );
+  
+      // Books count by categories
+      const categoryEndpoints = categories.map((category) =>
+        axios.get(`http://localhost:3000/book/countByCategory/${category}`)
+      );
+  
+      const [usersData, borrowsData, categoriesData] = await Promise.all([
+        Promise.all(usersEndpoints),
+        Promise.all(borrowsEndpoints),
+        Promise.all(categoryEndpoints),
+      ]);
+      data.Users[0].data = usersData.map(item => item.data.count)
+      data.Books[0].data = borrowsData.map(item => item.data.count)
+      data.Borrows[0].data = categoriesData.map(item => item.data.count)
+      
+      console.log(data.Users[0].data, data.Books[0].data, data.Borrows[0].data)
+      data.value = data.value
+      console.log(data)
+    }catch(e){
+      console.error(e)
+    }
+  }
+  console.log(data)
 const usersChart = {
   chartData: {
     labels: [ 'User', 'Admin' ],
@@ -55,7 +75,7 @@ const booksChart = {
 }
 const borrowsChart = {
   chartData: {
-    labels: [ 'Pending...', 'Success', 'Exp' ],
+    labels: [ 'Pending', 'Success', 'Expired', 'Deny' ],
     datasets: data.Borrows
     
   },
